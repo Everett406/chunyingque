@@ -54,7 +54,7 @@ body::before {
 .container {
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 28px;
 }
 
 /* 导航 */
@@ -513,6 +513,7 @@ footer {
 
 /* 响应式 */
 @media (max-width: 768px) {
+    .container { padding: 0 22px; }
     .hero-title { font-size: 2.2rem; letter-spacing: 6px; }
     .episode-grid { grid-template-columns: 1fr; }
     .character-card { flex-direction: column; align-items: center; text-align: center; }
