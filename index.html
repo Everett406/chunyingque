@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页 | 春盈阙</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">春盈阙</a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="episodes/index.html">分集</a>
+                <a href="characters.html">角色</a>
+                <a href="about.html">关于</a>
+                <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
+                    <span class="icon-sun">☀</span>
+                    <span class="icon-moon">☾</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="container">
+            <h1 class="hero-title">春盈阙</h1>
+            <p class="hero-subtitle">古装宫廷权谋言情 · 全55集</p>
+            <p class="hero-desc">
+                太医之女李春盈被迫替逃婚的嫡姐嫁给"克妻"摄政王尚家辉，<br>
+                从一枚任人摆布的弃子，一路逆袭成搅动朝局的女人，<br>
+                也一寸寸捂热了那座冰山。
+            </p>
+            <a href="episodes/index.html" class="hero-btn primary">开始追剧</a>
+            <a href="characters.html" class="hero-btn">角色档案</a>
+        </div>
+    </div>
+
+    <div class="divider">◆ ◆ ◆</div>
+
+    <div class="container" style="padding: 40px 20px;">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h2 style="color: var(--accent); font-size: 1.5rem; letter-spacing: 6px; margin-bottom: 15px;">三幕结构</h2>
+            <p style="color: var(--text-secondary);">权谋线 · 悬案线 · 感情线 三线交织</p>
+        </div>
+
+        <div class="episode-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+            <div class="card">
+                <div class="card-title">第一幕 · 建置</div>
+                <div class="card-text">第1–12集<br>替嫁入府，洞房冷语，独居听雪苑。银针救阿团，毒酒局他选择信她。白月光画像，心口发堵。</div>
+            </div>
+            <div class="card">
+                <div class="card-title">第二幕 · 对抗</div>
+                <div class="card-text">第13–44集<br>宫宴护妻，雨夜告白，凯旋初吻。血书现世，金殿休书，坠崖死讯。他一夜白头，她暗中返京。</div>
+            </div>
+            <div class="card">
+                <div class="card-title">第三幕 · 高潮/结局</div>
+                <div class="card-text">第45–55集<br>死而复生，金殿对质，太后党覆灭。画像揭秘——原来十年前就见过。城楼一问：庙堂，还是江湖？</div>
+            </div>
+        </div>
+
+        <div class="divider">◆ ◆ ◆</div>
+
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="color: var(--accent); font-size: 1.5rem; letter-spacing: 6px; margin-bottom: 15px;">关键名场面</h2>
+        </div>
+
+        <div class="episode-grid" style="grid-template-columns: 1fr;">
+            <div class="card" style="border-left: 3px solid var(--accent);">
+                <div class="card-title">第1集 · 替嫁</div>
+                <div class="card-text">"那王爷现在有两个选择——写下休书，或者，试试我这个赝品。"</div>
+            </div>
+            <div class="card" style="border-left: 3px solid var(--accent);">
+                <div class="card-title">第15集 · 宫宴护妻</div>
+                <div class="card-text">"本王的人，谁敢动？"</div>
+            </div>
+            <div class="card" style="border-left: 3px solid var(--accent);">
+                <div class="card-title">第18集 · 雨夜</div>
+                <div class="card-text">他执伞在听雪苑外站到五更天，告白说到一半，宫里急诏到。</div>
+            </div>
+            <div class="card" style="border-left: 3px solid var(--accent);">
+                <div class="card-title">第36集 · 金殿休书</div>
+                <div class="card-text">满朝文武前他冷脸递休书；她接纸的手在抖，他转身红了眼。</div>
+            </div>
+            <div class="card" style="border-left: 3px solid var(--accent);">
+                <div class="card-title">第53集 · 画像揭秘</div>
+                <div class="card-text">书房画像揭秘：画的是十年前的小春盈。原来缘分早就写了开头。</div>
+            </div>
+            <div class="card" style="border-left: 3px solid var(--accent);">
+                <div class="card-title">第55集 · 你猜</div>
+                <div class="card-text">"庙堂，还是江湖？""你猜。"马车出城，十指相扣。</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>《春盈阙》· 全55集 · 庙堂，还是江湖？你猜。</p>
+        </div>
+    </footer>
+    <script>
+        // 阅读进度条
+        window.addEventListener('scroll', function() {
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+            document.getElementById('progress').style.width = progress + '%';
+        });
+    </script>
+    
+
+<script>
+(function() {
+    var saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+})();
+function toggleTheme() {
+    var html = document.documentElement;
+    var current = html.getAttribute('data-theme');
+    if (current === 'dark') {
+        html.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+    } else {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+    }
+}
+</script>
+</body>
+</html>
