@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>角色档案 | 春盈阙</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
 (function() {
     var saved = localStorage.getItem('theme');
@@ -15,6 +15,249 @@
     }
 })();
 </script>
+<style>
+.char-section { margin-bottom: 50px; }
+.char-section h2 {
+    color: var(--accent);
+    font-size: 1.4rem;
+    margin: 40px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 3px;
+}
+.char-section h3 {
+    color: var(--accent-light);
+    font-size: 1.15rem;
+    margin: 25px 0 12px;
+}
+
+/* 角色大卡片 */
+.char-profile {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 28px;
+    margin-bottom: 24px;
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.4s;
+}
+.char-profile:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 20px var(--shadow-hover);
+}
+.char-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.char-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+.char-name {
+    font-size: 1.25rem;
+    color: var(--accent);
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+.char-role {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 2px;
+}
+.char-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.char-tag {
+    font-size: 0.78rem;
+    padding: 3px 10px;
+    border-radius: 3px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+.char-tag.important {
+    background: rgba(184,146,74,0.12);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+.char-detail {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 2;
+}
+.char-detail p { margin-bottom: 8px; }
+.char-detail strong { color: var(--accent-light); }
+.char-quote {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 0.92rem;
+    border-radius: 0 4px 4px 0;
+}
+
+/* 反派层级标签 */
+.villain-tier {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 2px 10px;
+    border-radius: 3px;
+    margin-right: 8px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.tier-small { background: rgba(106,158,106,0.15); color: var(--success); border: 1px solid rgba(106,158,106,0.3); }
+.tier-mid { background: rgba(201,168,108,0.15); color: var(--accent); border: 1px solid rgba(201,168,108,0.3); }
+.tier-big { background: rgba(196,92,92,0.15); color: var(--danger); border: 1px solid rgba(196,92,92,0.3); }
+.tier-hidden { background: rgba(150,120,180,0.15); color: #a080c0; border: 1px solid rgba(150,120,180,0.3); }
+[data-theme='dark'] .tier-hidden { color: #c0a0e0; }
+
+/* 表格 */
+.char-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.93rem;
+}
+.char-table th {
+    background: var(--bg-secondary);
+    color: var(--accent);
+    padding: 11px 14px;
+    text-align: left;
+    border: 1px solid var(--border);
+    font-weight: 600;
+}
+.char-table td {
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    vertical-align: top;
+    line-height: 1.7;
+}
+.char-table tr:hover td { background: var(--bg-secondary); }
+
+/* 感情线时间线 */
+.timeline {
+    position: relative;
+    padding-left: 24px;
+    margin: 20px 0;
+}
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: var(--border);
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 18px;
+    padding-left: 18px;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--accent);
+}
+.timeline-item.cold::before { border-color: #7ab8d4; }
+.timeline-item.warm::before { border-color: var(--accent); }
+.timeline-item.hot::before { border-color: #d48080; }
+.timeline-item.end::before { border-color: var(--success); }
+.timeline-ep {
+    font-size: 0.82rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+.timeline-text {
+    color: var(--text-secondary);
+    font-size: 0.93rem;
+    line-height: 1.7;
+}
+.timeline-emoji {
+    font-size: 0.85rem;
+    margin-left: 6px;
+}
+
+/* 关键场景 */
+.scene-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px;
+    margin-bottom: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.scene-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px var(--shadow-hover);
+}
+.scene-ep {
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+.scene-title {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.scene-desc {
+    color: var(--text-secondary);
+    font-size: 0.94rem;
+    line-height: 1.9;
+}
+
+/* Mermaid */
+.mermaid-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin: 20px 0;
+    overflow-x: auto;
+}
+.mermaid {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .char-profile { padding: 20px; }
+    .char-avatar { width: 50px; height: 50px; font-size: 1.3rem; }
+    .char-name { font-size: 1.1rem; }
+    .char-table { font-size: 0.85rem; }
+    .char-table th, .char-table td { padding: 8px 10px; }
+    .timeline { padding-left: 18px; }
+    .scene-card { padding: 16px; }
+}
+</style>
 </head>
 <body>
     <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
@@ -37,177 +280,327 @@
     <div class="container" style="padding-top: 40px; padding-bottom: 40px;">
         <div style="text-align: center; margin-bottom: 40px;">
             <h1 style="color: var(--accent); font-size: 2rem; letter-spacing: 8px; margin-bottom: 10px;">角色档案</h1>
-            <p style="color: var(--text-secondary);">主要角色 · 反派体系 · 关系图谱</p>
+            <p style="color: var(--text-secondary);">主要角色 · 反派体系 · 关系图谱 · 感情弧线</p>
         </div>
-        <div class="episode-body">
-            <h1>《春盈阙》角色档案</h1>
 
-<hr>
+        <!-- 一、主要角色 -->
+        <div class="char-section">
+            <h2>一、主要角色</h2>
 
-<h2>一、主要角色</h2>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <div class="char-avatar">尚</div>
+                    <div>
+                        <div class="char-name">尚家辉</div>
+                        <div class="char-role">男主 · 摄政王 · 28岁</div>
+                    </div>
+                </div>
+                <div class="char-tags">
+                    <span class="char-tag">冷面</span>
+                    <span class="char-tag">隐忍</span>
+                    <span class="char-tag">腹黑</span>
+                    <span class="char-tag">深情克制</span>
+                    <span class="char-tag">护短</span>
+                </div>
+                <div class="char-detail">
+                    <p><strong>外貌：</strong>玄色蟒袍，眉目冷峻如刀刻，左眼底一颗小痣，身形挺拔，不怒自威。</p>
+                    <p><strong>公开身份：</strong>权倾朝野的摄政王，人称"活阎王"，命中"克妻"，三任未婚妻皆暴毙。</p>
+                    <p><strong>真实身份：</strong>十年来扮冷血、藏锋芒，只为查清生母宸妃暴毙真相；"克妻"传闻实为太后党连杀三人，他自此封心——直到李春盈嫁进来。</p>
+                    <p><strong>核心动机：</strong>为母昭雪、扳倒太后党、护住幼帝江山；后来多了一条：护住她。</p>
+                    <p><strong>最大冲突：</strong>爱上了一枚"棋子"——休书保她的那一刻，江山和心只能选一个。</p>
+                </div>
+                <div class="char-quote">"本王的人，轮不到旁人置喙。"（对所有人冷脸，唯独对她，尾音会软下来）</div>
+            </div>
 
-<h3>尚家辉 —— 男主 · 摄政王（28岁）</h3>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <div class="char-avatar">李</div>
+                    <div>
+                        <div class="char-name">李春盈</div>
+                        <div class="char-role">女主 · 替嫁医妃 · 20岁</div>
+                    </div>
+                </div>
+                <div class="char-tags">
+                    <span class="char-tag">坚韧</span>
+                    <span class="char-tag">冷静</span>
+                    <span class="char-tag">不卑不亢</span>
+                    <span class="char-tag">嘴硬心软</span>
+                    <span class="char-tag">医者仁心</span>
+                </div>
+                <div class="char-detail">
+                    <p><strong>外貌：</strong>清丽杏眼，笑起来有梨涡但极少对人笑；随身一只磨旧的银针包，从不离身。</p>
+                    <p><strong>公开身份：</strong>太医院院判之女，替逃婚嫡姐李婉柔入府的"赝品王妃"。</p>
+                    <p><strong>真实身份：</strong>十年前随父入宫、救过失恃少年的小医女；父亲的银针包夹层里，藏着能掀翻太后的血书。</p>
+                    <p><strong>核心动机：</strong>查清李家被旧案牵连的真相；活下去，并且活得有尊严。</p>
+                    <p><strong>最大冲突：</strong>发现李家冤案与尚家有关，爱与恨之间反复撕扯；被"休弃"后仍选择信他最后一次。</p>
+                </div>
+                <div class="char-quote">"王爷，治病和治人，是一个道理。"</div>
+            </div>
 
-<ul>
-<li><strong>外貌：</strong> 玄色蟒袍，眉目冷峻如刀刻，左眼底一颗小痣，身形挺拔，不怒自威。</li>
-<li><strong>性格关键词：</strong> 冷面、隐忍、腹黑、深情克制、护短</li>
-<li><strong>公开身份：</strong> 权倾朝野的摄政王，人称"活阎王"，命中"克妻"，三任未婚妻皆暴毙。</li>
-<li><strong>真实身份：</strong> 十年来扮冷血、藏锋芒，只为查清生母宸妃暴毙真相；"克妻"传闻实为太后党连杀三人，他自此封心——直到李春盈嫁进来。</li>
-<li><strong>核心动机：</strong> 为母昭雪、扳倒太后党、护住幼帝江山；后来多了一条：护住她。</li>
-<li><strong>最大冲突点：</strong> 爱上了一枚"棋子"——休书保她的那一刻，江山和心只能选一个。</li>
-<li><strong>爽点功能：</strong> 护妻碾压、亮底牌反杀、冰山反差宠溺。</li>
-<li><strong>口头禅：</strong> "本王的人，轮不到旁人置喙。"（对所有人冷脸，唯独对她，尾音会软下来）</li>
-</ul>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <div class="char-avatar">青</div>
+                    <div>
+                        <div class="char-name">青黛</div>
+                        <div class="char-role">女主陪嫁丫鬟 · 17岁</div>
+                    </div>
+                </div>
+                <div class="char-detail">
+                    <p>忠心嘴碎，王府里唯一敢跟李春盈说真话的人，喜剧调剂担当。</p>
+                </div>
+                <div class="char-quote">"小姐，这王府的风水怕是克人！"</div>
+            </div>
 
-<h3>李春盈 —— 女主 · 替嫁医妃（20岁）</h3>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <div class="char-avatar">墨</div>
+                    <div>
+                        <div class="char-name">墨七</div>
+                        <div class="char-role">男主贴身侍卫 · 25岁</div>
+                    </div>
+                </div>
+                <div class="char-detail">
+                    <p>冷面话少，执行机器，偶尔一句冷吐槽精准破防。</p>
+                </div>
+                <div class="char-quote">"王爷，属下只是觉得……您对王妃，不像对棋子。"</div>
+            </div>
 
-<ul>
-<li><strong>外貌：</strong> 清丽杏眼，笑起来有梨涡但极少对人笑；随身一只磨旧的银针包，从不离身。</li>
-<li><strong>性格关键词：</strong> 坚韧、冷静、不卑不亢、嘴硬心软、医者仁心</li>
-<li><strong>公开身份：</strong> 太医院院判之女，替逃婚嫡姐李婉柔入府的"赝品王妃"。</li>
-<li><strong>真实身份：</strong> 十年前随父入宫、救过失恃少年的小医女；父亲的银针包夹层里，藏着能掀翻太后的血书。</li>
-<li><strong>核心动机：</strong> 查清李家被旧案牵连的真相；活下去，并且活得有尊严。</li>
-<li><strong>最大冲突点：</strong> 发现李家冤案与尚家有关，爱与恨之间反复撕扯；被"休弃"后仍选择信他最后一次。</li>
-<li><strong>爽点功能：</strong> 医术封神打脸、智商在线破局、弃子逆袭。</li>
-<li><strong>口头禅：</strong> "王爷，治病和治人，是一个道理。"</li>
-</ul>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <div class="char-avatar">团</div>
+                    <div>
+                        <div class="char-name">阿团</div>
+                        <div class="char-role">寄养王府的故人之子 · 5岁</div>
+                    </div>
+                </div>
+                <div class="char-detail">
+                    <p>镇北将军遗孤，全府上下的团宠。第6集中毒被女主所救，从此只认"盈姐姐"，人形助攻。</p>
+                </div>
+                <div class="char-quote">"盈姐姐，皇叔父又偷看你了！"</div>
+            </div>
 
-<h3>青黛 —— 女主陪嫁丫鬟（17岁）</h3>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <div class="char-avatar">安</div>
+                    <div>
+                        <div class="char-name">李怀安</div>
+                        <div class="char-role">女主之父 · 50岁</div>
+                    </div>
+                </div>
+                <div class="char-detail">
+                    <p>前太医院院判，因宸妃旧案被贬为庶人软禁京郊。沉默寡言，十年暗查真相，血书的执笔者。</p>
+                </div>
+            </div>
+        </div>
 
-<p>忠心嘴碎，王府里唯一敢跟李春盈说真话的人，喜剧调剂担当。</p>
-<p>口头禅："小姐，这王府的风水怕是克人！"</p>
+        <!-- 二、反派体系 -->
+        <div class="char-section">
+            <h2>二、反派体系（四层）</h2>
 
-<h3>墨七 —— 男主贴身侍卫（25岁）</h3>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <span class="villain-tier tier-small">小反派</span>
+                    <div>
+                        <div class="char-name" style="font-size:1.1rem;">钱嬷嬷</div>
+                        <div class="char-role">王府管事嬷嬷 · 第3–8集</div>
+                    </div>
+                </div>
+                <div class="char-detail">
+                    <p>克扣份例、刁难新王妃、背后嚼舌"赝品也配当主子"。</p>
+                    <p><strong>动机：</strong>柳侧妃安插的眼线，想在主子面前立功。</p>
+                    <p><strong>退场：</strong>第8集被女主当众揭穿贪墨，杖责逐出王府——开胃菜打脸。</p>
+                </div>
+            </div>
 
-<p>冷面话少，执行机器，偶尔一句冷吐槽精准破防。</p>
-<p>口头禅："王爷，属下只是觉得……您对王妃，不像对棋子。"</p>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <span class="villain-tier tier-mid">中反派</span>
+                    <div>
+                        <div class="char-name" style="font-size:1.1rem;">柳如烟</div>
+                        <div class="char-role">摄政王侧妃 · 太后侄女 · 第5–31集</div>
+                    </div>
+                </div>
+                <div class="char-detail">
+                    <p><strong>动机：</strong>痴恋尚家辉多年，自认正妃之位非她莫属，被"赝品"抢走后疯狂报复。</p>
+                    <p><strong>手段：</strong>宫宴构陷下毒（第9集）、挑拨画像误会（第12集）、联合母家炮制李家"谋逆案"（第33集）。</p>
+                    <p><strong>三段式交锋：</strong>宫宴局被男主护妻化解（小胜）→ 李家案得逞，女主被休离府（她赢了最大的一次）→ 第31集男主亮底牌，当众揭她构陷证据，褫夺封号幽禁——她的败落，把太后逼到台前。</p>
+                </div>
+                <div class="char-quote">"赝品就是赝品，披上凤袍也成不了凤凰。"</div>
+            </div>
 
-<h3>阿团 —— 寄养王府的故人之子（5岁）</h3>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <span class="villain-tier tier-big">大反派</span>
+                    <div>
+                        <div class="char-name" style="font-size:1.1rem;">太后 · 萧氏</div>
+                        <div class="char-role">皇帝生母 · 垂帘听政 · 全程</div>
+                    </div>
+                </div>
+                <div class="char-detail">
+                    <p><strong>动机：</strong>当年她还是皇后时，先帝宠爱宸妃、传言欲改立宸妃之子为储——她一杯毒酒了结了宸妃。如今摄政王权势日盛，她怕的不是儿子丢皇位，怕的是当年的事翻出来。</p>
+                    <p><strong>人性面：</strong>对小皇帝的母爱是真的。结局新帝亲政、她被幽禁慈宁宫时，小皇帝隔着门喊了一声"母后"——可恨之人也有可怜处。</p>
+                </div>
+                <div class="char-quote">"哀家走过的路，比摄政王吃过的盐都多。"</div>
+            </div>
 
-<p>镇北将军遗孤，全府上下的团宠。第6集中毒被女主所救，从此只认"盈姐姐"，人形助攻。</p>
-<p>口头禅："盈姐姐，皇叔父又偷看你了！"</p>
+            <div class="char-profile">
+                <div class="char-profile-header">
+                    <span class="villain-tier tier-hidden">隐藏反派</span>
+                    <div>
+                        <div class="char-name" style="font-size:1.1rem;">沈不言</div>
+                        <div class="char-role">王府长史 · 男主第一谋士 · 第53集揭露</div>
+                    </div>
+                </div>
+                <div class="char-detail">
+                    <p><strong>表面：</strong>跟随尚家辉十年，运筹帷幄的最信任盟友，查旧案全靠他奔走。</p>
+                    <p><strong>真相：</strong>当年向太后递上宸妃行踪、换来活命与前程的人，正是他。潜伏十年，一边帮男主查案一边精准掐断关键线索。</p>
+                    <p><strong>伏笔：</strong></p>
+                    <p>① 第10集：追查旧案刚有眉目，他"恰好"带回更紧急的军报打断了调查</p>
+                    <p>② 第24集：力劝男主"李家已是弃子，当断则断"——差点掐死血书这条线</p>
+                    <p>③ 第40集：女主离府路线，全府只有他提前知道——坠崖刺杀由此而来</p>
+                    <p><strong>揭露：</strong>第53集，太后倒台、众人松一口气时，他挟小皇帝欲焚毁先帝遗诏——"你真的以为，这一切是巧合？"</p>
+                    <p><strong>下场：</strong>第54集被墨七擒下，男主亲自问斩前只问了一句："十年，你有过一刻真心吗？"</p>
+                </div>
+            </div>
+        </div>
 
-<h3>李怀安 —— 女主之父（50岁）</h3>
+        <!-- 三、角色关系图 -->
+        <div class="char-section">
+            <h2>三、角色关系图</h2>
+            <div class="mermaid-wrap">
+                <div class="mermaid">
+graph LR
+    A[尚家辉<br/>摄政王] -->|先婚后爱| B[李春盈<br/>替嫁医妃]
+    B -->|幼年曾救| A
+    C[太后] -->|毒杀宸妃| A
+    C -->|幕后操控| E[柳如烟<br/>侧妃]
+    E -->|痴恋| A
+    E -->|构陷| B
+    D[沈不言<br/>长史] -->|十年潜伏| A
+    D -->|暗通| C
+    F[李怀安] -->|父女| B
+    C -->|贬黜| F
+    G[小皇帝] -->|母子| C
+    A -->|辅政| G
+    H[阿团] -->|助攻| B
+    I[青黛] -->|忠仆| B
+    J[墨七] -->|忠卫| A
+                </div>
+            </div>
+        </div>
 
-<p>前太医院院判，因宸妃旧案被贬为庶人软禁京郊。沉默寡言，十年暗查真相，血书的执笔者。</p>
+        <!-- 四、角色弧线 -->
+        <div class="char-section">
+            <h2>四、角色弧线</h2>
+            <table class="char-table">
+                <thead>
+                    <tr><th>角色</th><th>起点</th><th>终点</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong style="color:var(--accent)">尚家辉</strong></td><td>冷血冰山，把所有人当棋子</td><td>学会说爱，愿为她交出整个朝堂</td></tr>
+                    <tr><td><strong style="color:var(--accent)">李春盈</strong></td><td>替嫁弃子，只求活下去</td><td>与他并肩而立的女人，不是被庇护的菟丝花</td></tr>
+                    <tr><td><strong style="color:var(--accent)">太后</strong></td><td>运筹帷幄的执棋人</td><td>众叛亲离，幽禁慈宁宫</td></tr>
+                    <tr><td><strong style="color:var(--accent)">柳如烟</strong></td><td>嚣张侧妃</td><td>弃子，幽禁终老</td></tr>
+                    <tr><td><strong style="color:var(--accent)">沈不言</strong></td><td>完美盟友</td><td>面具撕碎，十年潜伏一朝尽毁</td></tr>
+                    <tr><td><strong style="color:var(--accent)">青黛</strong></td><td>胆小嘴碎的小丫鬟</td><td>敢替小姐挡刀的"李府第一忠仆"</td></tr>
+                </tbody>
+            </table>
+        </div>
 
-<hr>
+        <!-- 五、感情线弧线 -->
+        <div class="char-section">
+            <h2>五、感情线弧线</h2>
+            <div class="timeline">
+                <div class="timeline-item cold">
+                    <div class="timeline-ep">第1–4集</div>
+                    <div class="timeline-text">替嫁入府，洞房冷语，独居听雪苑 <span class="timeline-emoji">❄️ 冰点</span></div>
+                </div>
+                <div class="timeline-item warm">
+                    <div class="timeline-ep">第6集</div>
+                    <div class="timeline-text">救阿团，他第一次正眼看她 <span class="timeline-emoji">❄️→🌤</span></div>
+                </div>
+                <div class="timeline-item warm">
+                    <div class="timeline-ep">第9–10集</div>
+                    <div class="timeline-text">毒酒局，他选择信她 <span class="timeline-emoji">🌤 破冰</span></div>
+                </div>
+                <div class="timeline-item cold">
+                    <div class="timeline-ep">第12集</div>
+                    <div class="timeline-text">她发现"白月光"画像，心口发堵 <span class="timeline-emoji">🌤 微虐</span></div>
+                </div>
+                <div class="timeline-item warm">
+                    <div class="timeline-ep">第15集</div>
+                    <div class="timeline-text">宫宴护妻："本王的人，谁敢动？" <span class="timeline-emoji">☀️ 心动</span></div>
+                </div>
+                <div class="timeline-item hot">
+                    <div class="timeline-ep">第18集 💰</div>
+                    <div class="timeline-text">雨夜执伞守她一夜，告白被急诏打断 <span class="timeline-emoji">☀️☀️</span></div>
+                </div>
+                <div class="timeline-item hot">
+                    <div class="timeline-ep">第23集</div>
+                    <div class="timeline-text">联手查案，假夫妻真默契，意外初吻 <span class="timeline-emoji">☀️☀️ 高糖</span></div>
+                </div>
+                <div class="timeline-item cold">
+                    <div class="timeline-ep">第27集 💰</div>
+                    <div class="timeline-text">血书现世——李家冤案竟与尚家有关，她搬回听雪苑 <span class="timeline-emoji">🌧 虐</span></div>
+                </div>
+                <div class="timeline-item warm">
+                    <div class="timeline-ep">第30集</div>
+                    <div class="timeline-text">他扳倒贵妃，对她坦白半生隐忍 <span class="timeline-emoji">🌤 回暖</span></div>
+                </div>
+                <div class="timeline-item cold">
+                    <div class="timeline-ep">第36集 💰</div>
+                    <div class="timeline-text">金殿休书，她接纸的手在抖 <span class="timeline-emoji">⛈ 大虐顶点</span></div>
+                </div>
+                <div class="timeline-item cold">
+                    <div class="timeline-ep">第40–44集 💰(44)</div>
+                    <div class="timeline-text">坠崖死讯，他一夜白头血洗刺客营；她暗处养伤，得知休书是局 <span class="timeline-emoji">⛈→🌤</span></div>
+                </div>
+                <div class="timeline-item hot">
+                    <div class="timeline-ep">第46集</div>
+                    <div class="timeline-text">金殿重逢，"死而复生"那一眼 <span class="timeline-emoji">☀️☀️☀️ 大甜</span></div>
+                </div>
+                <div class="timeline-item hot">
+                    <div class="timeline-ep">第50集</div>
+                    <div class="timeline-text">玉佩定情——他母妃的遗物，亲手系在她腕上 <span class="timeline-emoji">☀️☀️☀️</span></div>
+                </div>
+                <div class="timeline-item hot">
+                    <div class="timeline-ep">第53集</div>
+                    <div class="timeline-text">画像揭秘：画的是十年前的小春盈 <span class="timeline-emoji">💥 情感核爆</span></div>
+                </div>
+                <div class="timeline-item end">
+                    <div class="timeline-ep">第55集</div>
+                    <div class="timeline-text">城楼："庙堂还是江湖？""你猜。" <span class="timeline-emoji">🌅 开放余韵</span></div>
+                </div>
+            </div>
+        </div>
 
-<h2>二、反派体系（四层）</h2>
+        <!-- 六、关键互动场景 -->
+        <div class="char-section">
+            <h2>六、关键互动场景</h2>
 
-<h3>🔹 小反派：钱嬷嬷 —— 王府管事嬷嬷（第3–8集）</h3>
+            <div class="scene-card">
+                <div class="scene-ep">第1–2集 · 第一次冲突</div>
+                <div class="scene-title">洞房夜</div>
+                <div class="scene-desc">他掀盖头："本王娶的是李家嫡女。"她起身行礼，不退不让："那王爷现在有两个选择——写下休书，或者，试试我这个赝品。"</div>
+            </div>
 
-<p>克扣份例、刁难新王妃、背后嚼舌"赝品也配当主子"。</p>
-<p><strong>动机：</strong> 柳侧妃安插的眼线，想在主子面前立功。</p>
-<p><strong>退场：</strong> 第8集被女主当众揭穿贪墨，杖责逐出王府——开胃菜打脸。</p>
+            <div class="scene-card">
+                <div class="scene-ep">第18集 · 感情转折</div>
+                <div class="scene-title">雨夜</div>
+                <div class="scene-desc">她隔着窗看见他执伞立在听雪苑外，站到五更天。门开那一刻，告白只说了一半，宫里急诏到。</div>
+            </div>
 
-<h3>🔹 中反派：柳如烟 —— 摄政王侧妃 · 太后侄女（第5集进府，第5–31集）</h3>
+            <div class="scene-card">
+                <div class="scene-ep">第46集 · 身份揭露</div>
+                <div class="scene-title">金殿之上</div>
+                <div class="scene-desc">满朝皆以为她死了。珠帘响动，她一身素衣走进来，百官哗然，他从王座上站起，十年来第一次失态。</div>
+            </div>
 
-<ul>
-<li><strong>动机：</strong> 痴恋尚家辉多年，自认正妃之位非她莫属，被"赝品"抢走后疯狂报复。</li>
-<li><strong>手段：</strong> 宫宴构陷下毒（第9集）、挑拨画像误会（第12集）、联合母家炮制李家"谋逆案"（第33集）。</li>
-<li><strong>三段式交锋：</strong> 宫宴局被男主护妻化解（小胜）→ 李家案得逞，女主被休离府（她赢了最大的一次）→ 第31集男主亮底牌，当众揭她构陷证据，褫夺封号幽禁——她的败落，把太后逼到台前。</li>
-<li><strong>台词风格：</strong> "赝品就是赝品，披上凤袍也成不了凤凰。"</li>
-</ul>
-
-<h3>🔹 大反派：太后 · 萧氏（全程，第25集后走到台前）</h3>
-
-<ul>
-<li><strong>身份：</strong> 皇帝生母，垂帘听政，外戚之首。</li>
-<li><strong>动机（可信）：</strong> 当年她还是皇后时，先帝宠爱宸妃、传言欲改立宸妃之子为储——她一杯毒酒了结了宸妃。如今摄政王权势日盛，她怕的不是儿子丢皇位，怕的是当年的事翻出来。</li>
-<li><strong>人性面：</strong> 对小皇帝的母爱是真的。结局新帝亲政、她被幽禁慈宁宫时，小皇帝隔着门喊了一声"母后"——可恨之人也有可怜处。</li>
-<li><strong>台词风格：</strong> "哀家走过的路，比摄政王吃过的盐都多。"</li>
-</ul>
-
-<h3>🔹 隐藏反派：沈不言 —— 王府长史 · 男主第一谋士（反转级，第53集揭露）</h3>
-
-<ul>
-<li><strong>表面：</strong> 跟随尚家辉十年，运筹帷幄的最信任盟友，查旧案全靠他奔走。</li>
-<li><strong>真相：</strong> 当年向太后递上宸妃行踪、换来活命与前程的人，正是他。潜伏十年，一边帮男主查案一边精准掐断关键线索。</li>
-<li><strong>伏笔（≥3处）：</strong></li>
-<ol>
-<li>第10集：追查旧案刚有眉目，他"恰好"带回更紧急的军报打断了调查</li>
-<li>第24集：力劝男主"李家已是弃子，当断则断"——差点掐死血书这条线</li>
-<li>第40集：女主离府路线，全府只有他提前知道——坠崖刺杀由此而来</li>
-<li><strong>揭露时机：</strong> 第53集，太后倒台、众人松一口气时，他挟小皇帝欲焚毁先帝遗诏——"你真的以为，这一切是巧合？"</li>
-<li><strong>下场：</strong> 第54集被墨七擒下，男主亲自问斩前只问了一句："十年，你有过一刻真心吗？"</li>
-</ul>
-</ol>
-
-<hr>
-
-<h2>三、角色关系图</h2>
-
-<pre><code>
-graph TD
-    A[尚家辉&lt;br&gt;摄政王] --&gt;|先婚后爱·先虐后甜| B[李春盈&lt;br&gt;替嫁医妃]
-    B --&gt;|幼年曾救过他| A
-    C[太后] --&gt;|毒杀其母宸妃| A
-    C --&gt;|安插眼线| E[柳如烟&lt;br&gt;侧妃]
-    E --&gt;|痴恋| A
-    E --&gt;|构陷| B
-    C --&gt;|幕后操控| E
-    D[沈不言&lt;br&gt;长史] --&gt;|十年潜伏·背叛| A
-    D --&gt;|暗通| C
-    F[李怀安] --&gt;|父女·血书| B
-    C --&gt;|贬黜软禁| F
-    G[小皇帝] --&gt;|母子| C
-    A --&gt;|辅政·叔侄| G
-    H[阿团] --&gt;|人形助攻| B
-    I[青黛] --&gt;|忠仆| B
-    J[墨七] --&gt;|忠卫| A
-</pre></code>
-
-<hr>
-
-<h2>四、角色弧线</h2>
-
-<p>| 角色 | 起点 | 终点 |</p>
-<p>|------|------|------|</p>
-<p>| 尚家辉 | 冷血冰山，把所有人当棋子 | 学会说爱，愿为她交出整个朝堂 |</p>
-<p>| 李春盈 | 替嫁弃子，只求活下去 | 与他并肩而立的女人，不是被庇护的菟丝花 |</p>
-<p>| 太后 | 运筹帷幄的执棋人 | 众叛亲离，幽禁慈宁宫 |</p>
-<p>| 柳如烟 | 嚣张侧妃 | 弃子，幽禁终老 |</p>
-<p>| 沈不言 | 完美盟友 | 面具撕碎，十年潜伏一朝尽毁 |</p>
-<p>| 青黛 | 胆小嘴碎的小丫鬟 | 敢替小姐挡刀的"李府第一忠仆" |</p>
-
-<hr>
-
-<h2>五、感情线弧线（集数节点）</h2>
-
-<p>| 集数 | 节点 | 温度 |</p>
-<p>|------|------|------|</p>
-<p>| 1–4 | 替嫁入府，洞房冷语，独居听雪苑 | ❄️ 冰点 |</p>
-<p>| 6 | 救阿团，他第一次正眼看她 | ❄️→🌤 |</p>
-<p>| 9–10 | 毒酒局，他选择信她 | 🌤 破冰 |</p>
-<p>| 12 | 她发现"白月光"画像，心口发堵 | 🌤 微虐 |</p>
-<p>| 15 | 宫宴护妻："本王的人，谁敢动？" | ☀️ 心动 |</p>
-<p>| 18 | 雨夜执伞守她一夜，告白被急诏打断 💰 | ☀️☀️ |</p>
-<p>| 23 | 联手查案，假夫妻真默契，意外初吻 | ☀️☀️ 高糖 |</p>
-<p>| 27 | 血书现世——李家冤案竟与尚家有关，她搬回听雪苑 💰 | 🌧 虐 |</p>
-<p>| 30 | 他扳倒贵妃，对她坦白半生隐忍 | 🌤 回暖 |</p>
-<p>| 36 | 金殿休书，她接纸的手在抖 💰 | ⛈ 大虐顶点 |</p>
-<p>| 40–44 | 坠崖死讯，他一夜白头血洗刺客营；她暗处养伤，得知休书是局 💰(44) | ⛈→🌤 |</p>
-<p>| 46 | 金殿重逢，"死而复生"那一眼 | ☀️☀️☀️ 大甜 |</p>
-<p>| 50 | 玉佩定情——他母妃的遗物，亲手系在她腕上 | ☀️☀️☀️ |</p>
-<p>| 53 | 画像揭秘：画的是十年前的小春盈 | 💥 情感核爆 |</p>
-<p>| 55 | 城楼："庙堂还是江湖？""你猜。" | 🌅 开放余韵 |</p>
-
-<hr>
-
-<h2>六、关键互动场景预设</h2>
-
-<ol>
-<li><strong>第一次冲突（第1–2集）：</strong> 洞房夜。他掀盖头："本王娶的是李家嫡女。"她起身行礼，不退不让："那王爷现在有两个选择——写下休书，或者，试试我这个赝品。"</li>
-<li><strong>身份揭露（第46集）：</strong> 金殿之上，满朝皆以为她死了。珠帘响动，她一身素衣走进来，百官哗然，他从王座上站起，十年来第一次失态。</li>
-<li><strong>感情转折（第18集）：</strong> 雨夜，她隔着窗看见他执伞立在听雪苑外，站到五更天。门开那一刻，告白只说了一半，宫里急诏到。</li>
-<li><strong>终极对决（第50–52集）：</strong> 金殿对质。她呈血书，他亮遗诏，太后笑到流泪："哀家输了，输在十年前没斩草除根。"</li>
-</ol>
-
-<hr>
-
-<p>✅ 角色档案已保存！输入 /outline 规划全剧分集</p>
-
+            <div class="scene-card">
+                <div class="scene-ep">第50–52集 · 终极对决</div>
+                <div class="scene-title">金殿对质</div>
+                <div class="scene-desc">她呈血书，他亮遗诏，太后笑到流泪："哀家输了，输在十年前没斩草除根。"</div>
+            </div>
         </div>
     </div>
 
@@ -217,7 +610,6 @@ graph TD
         </div>
     </footer>
     <script>
-        // 阅读进度条
         window.addEventListener('scroll', function() {
             var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -225,8 +617,26 @@ graph TD
             document.getElementById('progress').style.width = progress + '%';
         });
     </script>
-    
-
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'base',
+            themeVariables: {
+                primaryColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#332820' : '#ffffff',
+                primaryTextColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#e8dcc8' : '#2c2416',
+                primaryBorderColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#c9a86c' : '#b8924a',
+                lineColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#b8a890' : '#6b5d4d',
+                secondaryColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#2a2018' : '#f0ebe3',
+                tertiaryColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1a1410' : '#faf6f0',
+                fontFamily: '"Noto Serif SC", serif'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
 <script>
 function toggleTheme() {
     var html = document.documentElement;
